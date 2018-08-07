@@ -3,6 +3,7 @@ version: "3.2"
 services:
   coredns:
     image: coredns/coredns
+    container_name: coredns
     command: -conf /data/Corefile
     ports:
       - "53:53/udp"
@@ -10,3 +11,12 @@ services:
       - "9153:9153/tcp"
     volumes:
       - /home/jorge/coredns:/data:ro
+    restart: unless-stopped
+  watchtower:
+    image: v2tec/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /root/.docker/config.json:/config.json
+    command: --schedule "0 0 3 * * *"
+    restart: unless-stopped
